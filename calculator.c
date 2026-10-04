@@ -23,9 +23,6 @@ int factorValue(){
         }
         return number;
     }
-
-    printf("Error: Invalid character '%c'.\n", expression[position]);
-    return 0;
 }
 
 int termValue(){
