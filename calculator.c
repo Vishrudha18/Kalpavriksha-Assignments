@@ -11,26 +11,9 @@ int validateExpression(char expression[]);
 
 int factorValue(){
     int number = 0;
-
+    
     while(expression[position] == ' '){
         position++;
-    }
-
-    if(expression[position] == '('){
-        position++;
-        number = expressionValue();
-
-        while(expression[position] == ' '){
-            position++;
-        }
-
-        if(expression[position] != ')'){
-            printf("Error: Missing closing parenthesis.\n");
-            return 0;
-        }
-
-        position++;
-        return number;
     }
 
     if(isdigit(expression[position])){
@@ -103,7 +86,6 @@ int expressionValue(){
 
 int validateExpression(char expression[]){
     int expectingNumber = 1;
-    int parentheses = 0;
     int lastWasDigit = 0;
     int spaceAfterNumber = 0;
 
@@ -132,30 +114,6 @@ int validateExpression(char expression[]){
             lastWasDigit = 1;
             spaceAfterNumber = 0;
         }
-        else if(expression[i] == '('){
-            if(expectingNumber == 0){
-                return 0;
-            }
-
-            parentheses++;
-            expectingNumber = 1;
-            lastWasDigit = 0;
-            spaceAfterNumber = 0;
-        }
-        else if(expression[i] == ')'){
-            if(parentheses == 0){
-                return 0;
-            }
-
-            if(expectingNumber == 1){
-                return 0;
-            }
-
-            parentheses--;
-            expectingNumber = 0;
-            lastWasDigit = 0;
-            spaceAfterNumber = 0;
-        }
         else if(expression[i] == '+' ||
                 expression[i] == '-' ||
                 expression[i] == '*' ||
@@ -174,10 +132,6 @@ int validateExpression(char expression[]){
     }
 
     if(expectingNumber == 1){
-        return 0;
-    }
-
-    if(parentheses != 0){
         return 0;
     }
 
