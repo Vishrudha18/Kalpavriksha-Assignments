@@ -39,15 +39,10 @@ char calculateGrade(float average)
 
 void printRollNumbers(struct Student data[], int index, int no_of_stud)
 {
-    // base condition
     if(index >= no_of_stud){
         return;
     }
-
-    // print current roll number
     printf("%d ",data[index].roll_no);
-
-    // recursive call with index + 1
     printRollNumbers(data, index+1, no_of_stud);
 }
 
