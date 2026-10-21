@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 #define STANDARD_PRICE 150
 #define PREMIUM_PRICE 250
@@ -8,59 +10,91 @@
 int main()
 {
     char name[50];
+    char input[100];
+    char *endptr;
     int no_of_tickets;
     int choice;
+    int price;
+    char category[30];
 
-    if(scanf("%49s",name)!=1){
+    float subtotal;
+    float discount;
+
+    if (fgets(name, sizeof(name), stdin) == NULL) {
         printf("Invalid customer name");
         return 1;
     }
 
-    if(scanf("%d",&no_of_tickets)!=1){
+    name[strcspn(name, "\n")] = '\0';
+
+    if (name[0] == '\0' || strpbrk(name, " \t\r\n") != NULL) {
+        printf("Invalid customer name");
+        return 1;
+    }
+
+    if (fgets(input, sizeof(input), stdin) == NULL) {
         printf("Invalid ticket count");
         return 1;
     }
-    
-    if(no_of_tickets < 1 || no_of_tickets > 20){
+
+    no_of_tickets = (int)strtol(input, &endptr, 10);
+
+    while (isspace((unsigned char)*endptr)) {
+        endptr++;
+    }
+
+    if (endptr == input || *endptr != '\0') {
+        printf("Invalid ticket count");
+        return 1;
+    }
+
+    if (no_of_tickets < 1 || no_of_tickets > 20) {
         printf("Invalid ticket range");
         return 1;
     }
 
-    float subtotal = 0;
-
-    float discount;
-
-    if(scanf("%d",&choice)!=1){
+    if (fgets(input, sizeof(input), stdin) == NULL) {
         printf("Invalid choice");
         return 1;
     }
 
-    char category[30];
-    switch(choice){
-        case 1:
-        strcpy(category, "Standard");
-        subtotal = STANDARD_PRICE * no_of_tickets;
-        break;
+    choice = (int)strtol(input, &endptr, 10);
 
-        case 2:
-        strcpy(category, "Premium");
-        subtotal = PREMIUM_PRICE * no_of_tickets;
-        break;
+    while (isspace((unsigned char)*endptr)) {
+        endptr++;
+    }
 
-        case 3:
-        strcpy(category, "Recliner");
-        subtotal = RECLINER_PRICE * no_of_tickets;
-        break;
-
-        default:
-        printf("Invalid category");
+    if (endptr == input || *endptr != '\0') {
+        printf("Invalid choice");
         return 1;
     }
 
-    if(no_of_tickets >= 5){
-        discount = subtotal * 10 / 100;
+    switch (choice) {
+        case 1:
+            strcpy(category, "Standard");
+            price = STANDARD_PRICE;
+            break;
+
+        case 2:
+            strcpy(category, "Premium");
+            price = PREMIUM_PRICE;
+            break;
+
+        case 3:
+            strcpy(category, "Recliner");
+            price = RECLINER_PRICE;
+            break;
+
+        default:
+            printf("Invalid category");
+            return 1;
     }
-    else{
+
+    subtotal = (float)price * no_of_tickets;
+
+    if (no_of_tickets >= 5) {
+        discount = subtotal * 10 / 100;
+    } else {
         discount = 0;
     }
 
